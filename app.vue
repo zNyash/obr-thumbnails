@@ -11,6 +11,8 @@ getAuthToken()
 const scoreInfo = ref<ScoreInfo>();
 const scoreMods = ref<TModKey[]>()
 const beatmapInfo = ref<IBeatmapInfo>()
+const mapFile = ref()
+
 
 /**
  * Responsible for parsing the replay after upload
@@ -29,6 +31,7 @@ async function handleFileInput(e: Event){
   const beatmapHashMD5 = scoreInfo.value.beatmapHashMD5
   beatmapInfo.value = await getBeatmapByHash(beatmapHashMD5)
   scoreMods.value = getMods(scoreInfo.value.rawMods)
+  mapFile.value = await downloadOsuFile(String(beatmapInfo.value.id))
 }
 
 
@@ -46,6 +49,7 @@ async function handleFileInput(e: Event){
      <p>Map Max Combo: {{ beatmapInfo?.max_combo }}x</p>
      <p>Play Accuracy: {{ `${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ""}%`}}</p>
      <p>Mods: {{ scoreMods }}</p>
+     <p>Map Link: <a :href="`https://osu.ppy.sh/osu/${beatmapInfo?.beatmapset_id}`">{{ `https://osu.ppy.sh/osu/${beatmapInfo?.beatmapset_id}` }}</a></p>
 
   </main>
 </template>
