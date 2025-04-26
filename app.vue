@@ -49,7 +49,7 @@ async function handleFileInput(e: Event){
      <p>Map Max Combo: {{ beatmapInfo?.max_combo }}x</p>
      <p>Play Accuracy: {{ `${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ""}%`}}</p>
      <p>Mods: {{ scoreMods }}</p>
-     <p>Map Link: <a :href="`https://osu.ppy.sh/osu/${beatmapInfo?.beatmapset_id}`">{{ `https://osu.ppy.sh/osu/${beatmapInfo?.beatmapset_id}` }}</a></p>
+     <p>Map Link: <a :href="`${beatmapInfo?.url}`">{{ `${beatmapInfo?.url}` }}</a></p>
 
   </main>
 </template>
