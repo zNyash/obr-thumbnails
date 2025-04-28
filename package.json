@@ -26,6 +26,7 @@
     "osu-parsers": "^4.1.7",
     "osu-standard-stable": "^5.0.1",
     "osu-taiko-stable": "^5.0.1",
+    "rosu-pp-js": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
