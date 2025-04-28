@@ -1,5 +1,9 @@
 import { IModBitwise, type TModKey } from "~/types/IModBitwise"
 
+/**
+ * @param rawMods Bitwise value of mods combination
+ * @returns An array of selected mods. Example: ["HD", "DT"]
+ */
 export default (rawMods: number | string): TModKey[] => {
   const activeMods: TModKey[] = [] // Active mods array
 

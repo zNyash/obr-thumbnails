@@ -12,6 +12,6 @@ export default defineEventHandler(async (event) => {
     })
     return data
   } catch (error) {
-    return {"Error: ": error}
+    return {"Failed to get beatmap by hash from osu api: ": error}
   }
 })

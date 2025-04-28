@@ -1,5 +1,8 @@
 import axios from "axios";
 
+/**
+ * Get auth token everytime the page reloads
+ */
 export default async function () {
 	if (import.meta.server) {
 		const response = await axios("https://osu.ppy.sh/oauth/token", {

@@ -17,7 +17,7 @@ export interface IBeatmapInfo {
   cs: number
   deleted_at: unknown
   drain: number
-  hit_length: number
+  hit_length?: number
   is_scoreable: boolean
   last_updated: string
   mode_int: number
