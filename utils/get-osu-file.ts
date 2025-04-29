@@ -1,4 +1,3 @@
-
 /**
  * @param beatmapId The ID of the beatmap (not beatmap set)
  * @returns osu file as a string.

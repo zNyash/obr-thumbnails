@@ -1,8 +1,10 @@
 export interface ICalcAttrs {
-	accuracy: number;
-	combo: number;
-	n300: number;
-	n100: number;
-	n50: number;
-	misses: number;
+  accuracy: number
+  maxCombo: number
+  count300: number
+  count100: number
+  count50: number
+  countGeki: number
+  countKatu: number
+  countMiss: number
 }

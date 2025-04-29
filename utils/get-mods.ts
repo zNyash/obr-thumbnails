@@ -15,9 +15,9 @@ export default (rawMods: number | string): TModKey[] => {
     }
   }
 
-  if (activeMods.length < 1){
+  if (activeMods.length < 1) {
     activeMods.push("NM")
   }
 
-  return activeMods;
+  return activeMods
 }

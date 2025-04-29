@@ -1,5 +1,5 @@
 export const IModBitwise = {
-	NM: 0,
+  NM: 0,
   NF: 1,
   EZ: 2,
   TD: 4,
@@ -30,6 +30,6 @@ export const IModBitwise = {
   K3: 134217728,
   K2: 268435456,
   ScoreV2: 536870912,
-  Mirror: 1073741824
+  Mirror: 1073741824,
 } as const
-export type TModKey = keyof typeof IModBitwise;
+export type TModKey = keyof typeof IModBitwise

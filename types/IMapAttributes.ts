@@ -1,4 +1,5 @@
 export interface IMapAttributes {
-  starRating: number,
+  starRating: number
   pp: number
+  ppMax: number
 }
