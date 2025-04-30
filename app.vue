@@ -17,13 +17,20 @@ const calculatedMapAttributes = ref<IMapAttributes>()
 const scoreRank = ref<string>()
 let mapFile: string
 
+// Image Handling
+const loadMapBackgroundImage = computed(() => {
+  if (beatmapInfo.value)
+    return `https://assets.ppy.sh/beatmaps/${beatmapInfo.value.beatmapset_id}/covers/raw.jpg`
+  return `https://assets.ppy.sh/beatmaps/${2327424}/covers/raw.jpg`
+})
+
 /**
  * Responsible for parsing the replay after upload
  */
 async function handleFileInput(e: Event) {
   const target = e.target as HTMLInputElement
 
-  if (!target.files) return // Assuring a file exists
+  if (!target.files) return
 
   const file = await target.files[0].arrayBuffer()
 
@@ -37,7 +44,7 @@ async function handleFileInput(e: Event) {
   scoreMods.value = getMods(scoreInfo.value.rawMods)
   mapFile = await getOsuFile(beatmapInfo.value.id)
 
-  const attrs: ICalcAttrs = {
+  const replayAttributes: ICalcAttrs = {
     accuracy: scoreInfo.value.accuracy,
     maxCombo: scoreInfo.value.maxCombo,
     countMiss: scoreInfo.value.countMiss,
@@ -50,7 +57,7 @@ async function handleFileInput(e: Event) {
   calculatedMapAttributes.value = await getMapAttributes(
     mapFile,
     scoreInfo.value.rawMods,
-    attrs
+    replayAttributes
   )
 
   scoreRank.value = await getScoreRanking(
@@ -64,7 +71,7 @@ async function handleFileInput(e: Event) {
 </script>
 
 <template>
-  <main class="flex flex-col items-center justify-center h-[100vh]">
+  <main class="flex flex-col items-center justify-center">
     <!-- Input Area -->
     <input
       type="file"
@@ -85,16 +92,16 @@ async function handleFileInput(e: Event) {
         {{ `${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ""}%` }}
       </p>
       <p>Miss Count: {{ scoreInfo?.countMiss }}x</p>
-      <p>
-        PP: {{ calculatedMapAttributes?.pp }}/{{
-          calculatedMapAttributes?.ppMax
-        }}pp
-      </p>
+      <p>PP: {{ calculatedMapAttributes?.pp }}/{{ calculatedMapAttributes?.ppMax }}pp</p>
       <p>Mods: {{ scoreMods?.join("") }}</p>
       <p>
         Map Link:
         <a :href="`${beatmapInfo?.url}`">{{ `${beatmapInfo?.url}` }}</a>
       </p>
+    </div>
+    <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800">
+      <!-- Background Area -->
+      <img :src="loadMapBackgroundImage" class="object-cover w-full h-full object-center" />
     </div>
   </main>
 </template>

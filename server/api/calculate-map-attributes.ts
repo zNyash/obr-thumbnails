@@ -33,9 +33,7 @@ export default defineEventHandler(async (event) => {
     nKatu: attr.countKatu,
   }).calculate(map)
 
-  console.log(
-    `PP: ${currAttrs.pp}/${maxAttrs.pp} | Stars: ${maxAttrs.difficulty.stars}`
-  )
+  console.log(`PP: ${currAttrs.pp}/${maxAttrs.pp} | Stars: ${maxAttrs.difficulty.stars}`)
   return {
     starRating: _.round(currAttrs.difficulty.stars, 2),
     pp: _.round(currAttrs.pp, 2),

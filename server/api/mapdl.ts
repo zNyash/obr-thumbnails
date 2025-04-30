@@ -5,8 +5,7 @@ export default defineEventHandler(async (event) => {
   if (!beatmapId) return sendError(event, new Error("Missing beatmap id"))
 
   const response = await fetch(`https://osu.ppy.sh/osu/${beatmapId}`)
-  if (!response.ok)
-    return sendError(event, new Error("Failed to fetch .osu file"))
+  if (!response.ok) return sendError(event, new Error("Failed to fetch .osu file"))
 
   const osuFile = await response.text()
 
