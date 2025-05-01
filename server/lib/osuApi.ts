@@ -1,5 +1,4 @@
 import { NitroFetchOptions, NitroFetchRequest } from "nitropack"
-import { FetchOptions } from "ofetch"
 import { IBeatmapInfo } from "~/types/IBeatmapInfo"
 import { IPlayerInfo } from "~/types/IPlayerInfo"
 
