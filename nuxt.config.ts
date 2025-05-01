@@ -8,5 +8,16 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  fonts: {
+    families: [
+      { name: 'Nunito', provider: 'google' },
+    ],
+    defaults: {
+      preload: true,
+      
+    }
+    
+  },
+
   css: ["~/assets/css/main.css"],
 })
