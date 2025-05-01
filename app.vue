@@ -8,8 +8,6 @@ import type { ICalcAttrs } from "./types/ICalcAttrs"
 import type { IMapAttributes } from "./types/IMapAttributes"
 import type { IPlayerInfo } from "./types/IPlayerInfo"
 
-getAuthToken()
-
 // Basic Objects
 const scoreInfo = ref<ScoreInfo>()
 const scoreMods = ref<TModKey[]>()
@@ -18,6 +16,8 @@ const playerInfo = ref<IPlayerInfo>()
 const calculatedMapAttributes = ref<IMapAttributes>()
 const scoreRank = ref<string>()
 const colorMain = ref<string>("hsl(220 50 50)")
+const hasSB = ref<boolean>(false)
+const SBAmount = ref<number>(0)
 let mapFile: string
 
 // Image Handling
@@ -33,6 +33,7 @@ const loadMapBackgroundImage = computed(() => {
 async function handleFileInput(e: Event) {
   const target = e.target as HTMLInputElement
 
+  if (!process.env.OSU_TOKEN) getAuthToken()
   if (!target.files) return
 
   const file = await target.files[0].arrayBuffer()
@@ -80,12 +81,6 @@ async function handleFileInput(e: Event) {
     class="flex flex-col items-center justify-center p-6 gap-4"
     :style="{ '--main': colorMain }"
   >
-    <!-- Input Area -->
-    <input
-      type="file"
-      class="bg-neutral-900 p-1 rounded-md border-neutral-700 border hover:bg-neutral-800/75 cursor-pointer"
-      @change="handleFileInput"
-    />
     <div class="flex items-start flex-col w-fit">
       <p>Tittle: {{ beatmapInfo?.beatmapset.title }}</p>
       <p>Diff Name: {{ beatmapInfo?.version }}</p>
@@ -110,7 +105,32 @@ async function handleFileInput(e: Event) {
         <a :href="`${beatmapInfo?.url}`">{{ `${beatmapInfo?.url}` }}</a>
       </p>
     </div>
-    <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800 relative">
+    <!-- Input Area -->
+    <input
+      type="file"
+      class="bg-neutral-900 p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 cursor-pointer"
+      @change="handleFileInput"
+    />
+    <span class="flex gap-1 items-center h-11">
+      <input id="hasSb" type="checkbox" v-model="hasSB" />
+      <label for="hasSb">Has any Slider Breaks?</label>
+      <template v-if="hasSB">
+        <input
+          type="number"
+          class="bg-neutral-900 w-16 p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0"
+          v-model="SBAmount"
+        />
+      </template>
+    </span>
+    <div class="flex w-[1280px] h-[720px] bg-neutral-800 relative justify-center overflow-clip">
+      <Text
+        id="Text"
+        :text="`${beatmapInfo?.beatmapset.title}`"
+        size="64"
+        type="1"
+        class="absolute top-[34px]"
+      />
+
       <!-- Star Rating -->
       <div
         id="StarRating"
@@ -128,9 +148,78 @@ async function handleFileInput(e: Event) {
           :text="`${beatmapInfo?.max_combo}x`"
           size="24"
           type="2"
-          class="text-amber-200 -mt-4"
+          class="text-amber-200 -mt-3"
         />
       </div>
+
+      <!-- Play Info -->
+      <span>
+        <!-- Profile Username -->
+        <Text
+          id="Text"
+          :text="`${scoreInfo?.username}`"
+          size="64"
+          type="1"
+          class="absolute top-[221px] left-1/2"
+        />
+        <!-- PP -->
+        <Text
+          id="Text"
+          :text="`${calculatedMapAttributes?.pp}pp`"
+          size="48"
+          type="2"
+          class="absolute top-[367px] right-[788px]"
+        />
+        <!-- FC/SB/Misscount -->
+        <template v-if="scoreInfo?.countMiss === 0 && !hasSB">
+          <Text
+            id="Text"
+            data-name="FC"
+            :text="`FC`"
+            size="48"
+            type="3"
+            class="absolute top-[476px] right-[788px] text-amber-400"
+          />
+        </template>
+        <template v-else-if="scoreInfo?.countMiss === 0 && hasSB">
+          <Text
+            id="Text"
+            data-name="SB"
+            :text="`${SBAmount}sb`"
+            size="48"
+            type="3"
+            class="absolute top-[476px] right-[788px] text-indigo-300"
+          />
+        </template>
+        <template v-else>
+          <Text
+            id="Text"
+            data-name="MISS"
+            :text="`${scoreInfo?.countMiss}x`"
+            size="48"
+            type="3"
+            class="absolute top-[476px] right-[788px] text-red-400"
+          />
+        </template>
+        <!-- Accuracy -->
+        <Text
+          id="Text"
+          :text="`${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ''}%`"
+          size="48"
+          type="2"
+          class="absolute top-[367px] left-[788px]"
+        />
+        <!-- Mods -->
+        <Text
+          id="Text"
+          :text="`${scoreMods}`"
+          size="48"
+          type="2"
+          class="absolute top-[476px] left-[788px]"
+        />
+        <!-- Score Ranking -->
+        <ScoreRanking :rank="scoreRank" class="absolute z-10 left-[-250px] top-[35px]" />
+      </span>
 
       <!-- Profile -->
       <img
@@ -140,18 +229,19 @@ async function handleFileInput(e: Event) {
       />
 
       <!-- Background Area -->
-      <div id="Form" class="w-[1280px] h-[8px] absolute top-[176px] bg-[var(--main)]"></div>
-      <div id="Form" class="w-[1280px] h-[8px] absolute bottom-[0px] bg-[var(--main)]"></div>
-      <CornerLeft id="Form" :color="colorMain" class="absolute top-0 left-0" />
-      <CornerRight id="Form" :color="colorMain" class="absolute top-0 right-0" />
-
-      <span data-name="DarkenArea">
-        <div id="Darken1" class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
-        <BgGlow id="BgGlow" :color="colorMain" class="absolute bottom-0" />
-        <div
-          id="Darken2"
-          class="w-[1280px] h-[540px] bg-black/75 absolute bottom-0 backdrop-blur-lg"
-        ></div>
+      <span>
+        <div id="Form" class="w-[1280px] h-[8px] absolute top-[176px] bg-[var(--main)]"></div>
+        <div id="Form" class="w-[1280px] h-[8px] absolute bottom-[0px] bg-[var(--main)]"></div>
+        <CornerLeft id="Form" :color="colorMain" class="absolute top-0 left-0" />
+        <CornerRight id="Form" :color="colorMain" class="absolute top-0 right-0" />
+        <span data-name="DarkenArea">
+          <div id="Darken1" class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
+          <BgGlow id="BgGlow" :color="colorMain" class="absolute bottom-0" />
+          <div
+            id="Darken2"
+            class="w-[1280px] h-[540px] bg-black/75 absolute bottom-0 backdrop-blur-lg"
+          ></div>
+        </span>
       </span>
       <img :src="loadMapBackgroundImage" class="object-cover w-full h-full object-center" />
     </div>
@@ -173,5 +263,17 @@ async function handleFileInput(e: Event) {
 }
 #Profile {
   z-index: 2;
+}
+#Text {
+  z-index: 2;
+}
+[data-name="FC"] {
+  filter: drop-shadow(0px 0px 12px color-mix(in oklab, var(--color-amber-400) 40%, transparent));
+}
+[data-name="SB"] {
+  filter: drop-shadow(0px 0px 12px color-mix(in oklab, var(--color-indigo-400) 40%, transparent));
+}
+[data-name="MISS"] {
+  filter: drop-shadow(0px 0px 12px color-mix(in oklab, var(--color-red-400) 40%, transparent));
 }
 </style>

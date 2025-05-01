@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type StyleType = "1" | "2"
+type StyleType = "1" | "2" | "3"
 
 interface Props {
   text: string
@@ -15,18 +15,23 @@ const trueSize = `${size}px`
   <template v-if="type === '1'">
     <span :style="{ fontSize: trueSize }">
       <p
-        class="absolute -translate-x-1/2 align-top max-w-[1200px] truncate drop-shadow-[4px_4px_2px_#000]"
+        class="absolute -translate-x-1/2 align-top max-w-[1150px] top-0 left-0 truncate drop-shadow-[4px_4px_2px_#000]"
       >
         {{ text }}
       </p>
       <p
-        class="absolute -translate-x-1/2 align-top max-w-[1200px] truncate drop-shadow-[0_0_18px_#fff]"
+        class="absolute -translate-x-1/2 align-top max-w-[1150px] truncate drop-shadow-[0_0_18px_#fff]"
       >
         {{ text }}
       </p>
     </span>
   </template>
   <template v-else-if="type === '2'">
+    <span :style="{ fontSize: trueSize, lineHeight: lineHeight }">
+      <p class="align-top max-w-[1200px] truncate drop-shadow-[4px_4px_2px_#000]/75">{{ text }}</p>
+    </span>
+  </template>
+  <template v-else-if="type === '3'">
     <span :style="{ fontSize: trueSize, lineHeight: lineHeight }">
       <p class="align-top max-w-[1200px] truncate drop-shadow-[4px_4px_2px_#000]/75">{{ text }}</p>
     </span>
