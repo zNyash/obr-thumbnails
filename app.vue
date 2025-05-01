@@ -15,7 +15,7 @@ const scoreMods = ref<TModKey[]>()
 const beatmapInfo = ref<IBeatmapInfo>()
 const calculatedMapAttributes = ref<IMapAttributes>()
 const scoreRank = ref<string>()
-const colorMain = ref<string>()
+const colorMain = ref<string>("hsl(220 50 50)")
 let mapFile: string
 
 // Image Handling
@@ -68,14 +68,15 @@ async function handleFileInput(e: Event) {
     scoreInfo.value.count50,
     scoreInfo.value.countMiss
   )
-  colorMain.value = await getMainColor(
-    `https://assets.ppy.sh/beatmaps/${beatmapInfo.value.beatmapset_id}/covers/raw.jpg`
-  )
+  colorMain.value = await getMainColor(loadMapBackgroundImage.value)
 }
 </script>
 
 <template>
-  <main class="flex flex-col items-center justify-center p-6 gap-4">
+  <main
+    class="flex flex-col items-center justify-center p-6 gap-4"
+    :style="{ '--main': colorMain }"
+  >
     <!-- Input Area -->
     <input
       type="file"
@@ -108,15 +109,22 @@ async function handleFileInput(e: Event) {
     </div>
     <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800 relative">
       <!-- Background Area -->
-      <div class="w-[1280px] h-[24px] absolute top-0" :style="{ backgroundColor: colorMain }">
-        {{ colorMain }}
-      </div>
+      <div class="w-[1280px] h-[8px] absolute top-[176px] z-10 bg-[var(--main)]"></div>
+      <div class="w-[1280px] h-[8px] absolute bottom-[0px] z-10 bg-[var(--main)]"></div>
+      <CornerLeft :color="colorMain" class="absolute top-0 left-0 z-10" />
+      <CornerRight :color="colorMain" class="absolute top-0 right-0 z-10" />
 
       <span data-name="DarkenArea">
-        <div class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
-        <div class="w-[1280px] h-[540px] absolute bg-black/75 bottom-0 backdrop-blur-lg"></div>
+        <div id="Darken1" class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
+        <!-- <div id="BGGlow" class="w-[1280px] h-[540px] absolute bottom-0 backdrop-blur-lg" :style="{ backgroundColor: colorMain }"></div> -->
+        <div
+          id="Darken2"
+          class="w-[1280px] h-[540px] bg-black/75 absolute bottom-0 backdrop-blur-lg"
+        ></div>
       </span>
       <img :src="loadMapBackgroundImage" class="object-cover w-full h-full object-center" />
     </div>
   </main>
 </template>
+
+<style></style>

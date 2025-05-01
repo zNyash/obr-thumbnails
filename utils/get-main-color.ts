@@ -13,6 +13,7 @@ export default async (url: string) => {
     console.log("Failed to fetch backend api for 'main-color'")
     return "#121212"
   }
+  if (typeof response === "object" && "message" in response) return "#242424"
   console.log("HSL: ", response)
   return response
 }
