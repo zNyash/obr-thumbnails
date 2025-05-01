@@ -17,8 +17,10 @@
     "@types/lodash": "^4.17.16",
     "axios": "^1.9.0",
     "eslint": "^9.25.1",
+    "jimp": "^1.6.0",
     "lodash": "^4.17.21",
-    "nuxt": "^3.16.2",
+    "node-vibrant": "^4.0.3",
+    "nuxt": "^3.17.1",
     "osu-api-extended": "^3.1.4",
     "osu-catch-stable": "^4.0.1",
     "osu-classes": "^3.1.0",
@@ -32,7 +34,7 @@
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^6.13.2",
+    "@nuxtjs/tailwindcss": "^6.14.0",
     "prettier": "^3.5.3"
   }
 }

@@ -15,6 +15,7 @@ const scoreMods = ref<TModKey[]>()
 const beatmapInfo = ref<IBeatmapInfo>()
 const calculatedMapAttributes = ref<IMapAttributes>()
 const scoreRank = ref<string>()
+const colorMain = ref<string>()
 let mapFile: string
 
 // Image Handling
@@ -67,11 +68,14 @@ async function handleFileInput(e: Event) {
     scoreInfo.value.count50,
     scoreInfo.value.countMiss
   )
+  colorMain.value = await getMainColor(
+    `https://assets.ppy.sh/beatmaps/${beatmapInfo.value.beatmapset_id}/covers/raw.jpg`
+  )
 }
 </script>
 
 <template>
-  <main class="flex flex-col items-center justify-center">
+  <main class="flex flex-col items-center justify-center p-6 gap-4">
     <!-- Input Area -->
     <input
       type="file"
@@ -81,8 +85,11 @@ async function handleFileInput(e: Event) {
     <div class="flex items-start flex-col w-fit">
       <p>Tittle: {{ beatmapInfo?.beatmapset.title }}</p>
       <p>Diff Name: {{ beatmapInfo?.version }}</p>
-      <p>Star Rating: {{ beatmapInfo?.difficulty_rating }}*</p>
-      <p>Calculated Star Rating: {{ calculatedMapAttributes?.starRating }}*</p>
+      <p>
+        Star Rating: {{ beatmapInfo?.difficulty_rating }}*/{{
+          calculatedMapAttributes?.starRating
+        }}*
+      </p>
       <p>Player Name: {{ scoreInfo?.username }}</p>
       <p>Score Ranking: {{ scoreRank }}</p>
       <p>Play Max Combo: {{ scoreInfo?.maxCombo }}x</p>
@@ -92,15 +99,23 @@ async function handleFileInput(e: Event) {
         {{ `${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ""}%` }}
       </p>
       <p>Miss Count: {{ scoreInfo?.countMiss }}x</p>
-      <p>PP: {{ calculatedMapAttributes?.pp }}/{{ calculatedMapAttributes?.ppMax }}pp</p>
+      <p>PP: {{ calculatedMapAttributes?.pp }}pp/{{ calculatedMapAttributes?.ppMax }}pp</p>
       <p>Mods: {{ scoreMods?.join("") }}</p>
       <p>
         Map Link:
         <a :href="`${beatmapInfo?.url}`">{{ `${beatmapInfo?.url}` }}</a>
       </p>
     </div>
-    <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800">
+    <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800 relative">
       <!-- Background Area -->
+      <div class="w-[1280px] h-[24px] absolute top-0" :style="{ backgroundColor: colorMain }">
+        {{ colorMain }}
+      </div>
+
+      <span data-name="DarkenArea">
+        <div class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
+        <div class="w-[1280px] h-[540px] absolute bg-black/75 bottom-0 backdrop-blur-lg"></div>
+      </span>
       <img :src="loadMapBackgroundImage" class="object-cover w-full h-full object-center" />
     </div>
   </main>

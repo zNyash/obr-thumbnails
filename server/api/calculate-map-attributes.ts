@@ -15,11 +15,16 @@ export default defineEventHandler(async (event) => {
     countGeki: query.countGeki as number,
     countKatu: query.countKatu as number,
   }
-  console.log(attr)
   const mapBuffer = Buffer.from(String(attr.mapFile), "utf-8")
   const map = new Beatmap(mapBuffer)
 
-  const maxAttrs = new Performance({ mods: attr.rawMods }).calculate(map)
+  const maxAttrs = new Performance({
+    mods: attr.rawMods,
+    lazer: false,
+    n300: attr.count300,
+    n100: attr.count100,
+    n50: attr.count50,
+  }).calculate(map)
   const currAttrs = new Performance({
     accuracy: attr.accuracy * 100,
     mods: attr.rawMods,
@@ -33,11 +38,10 @@ export default defineEventHandler(async (event) => {
     nKatu: attr.countKatu,
   }).calculate(map)
 
-  console.log(`PP: ${currAttrs.pp}/${maxAttrs.pp} | Stars: ${maxAttrs.difficulty.stars}`)
   return {
     starRating: _.round(currAttrs.difficulty.stars, 2),
-    pp: _.round(currAttrs.pp, 2),
-    ppMax: _.round(maxAttrs.pp, 2),
+    pp: _.round(currAttrs.pp),
+    ppMax: _.round(maxAttrs.pp),
     rest: currAttrs,
   }
   // return currAttrs
