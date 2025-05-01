@@ -4,7 +4,7 @@ import { Beatmap, Performance } from "rosu-pp-js"
 export default defineEventHandler(async (event) => {
   const query = await readBody(event)
   const attr = {
-    mapFile: query.mapFile as number,
+    mapFile: query.mapFile as string,
     rawMods: query.rawMods as number,
     maxCombo: query.maxCombo as number,
     accuracy: query.accuracy as number,
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     countGeki: query.countGeki as number,
     countKatu: query.countKatu as number,
   }
-  const mapBuffer = Buffer.from(String(attr.mapFile), "utf-8")
+  const mapBuffer = Buffer.from(attr.mapFile, "utf-8")
   const map = new Beatmap(mapBuffer)
 
   const maxAttrs = new Performance({

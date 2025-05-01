@@ -33,7 +33,6 @@ const loadMapBackgroundImage = computed(() => {
 async function handleFileInput(e: Event) {
   const target = e.target as HTMLInputElement
 
-  if (!process.env.OSU_TOKEN) getAuthToken()
   if (!target.files) return
 
   const file = await target.files[0].arrayBuffer()

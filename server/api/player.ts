@@ -1,11 +1,18 @@
+import { osuApi } from "../lib/osuApi"
+
 export default defineEventHandler(async (event) => {
   const { username } = await readBody(event)
-  const OSU_TOKEN = process.env.OSU_TOKEN
 
-  const response = await $fetch(`https://osu.ppy.sh/api/v2/users/${username}`, {
-    headers: {
-      Authorization: `Bearer ${OSU_TOKEN}`,
-    },
-  })
-  return response
+  try {
+    const playerInfo = await osuApi.getUser(username)
+    return playerInfo
+  } catch (error: any) {
+    console.error("🔴 Error in route /api/player:", error)
+    throw createError({
+      statusCode: error.statusCode || 500,
+      statusMessage:
+        error.statusMessage || "🔴 Internal server error processing player information request",
+      data: error.data,
+    })
+  }
 })

@@ -5,8 +5,20 @@ import type { IBeatmapInfo } from "~/types/IBeatmapInfo"
  * @returns An object containing all information about the beatmap.
  */
 export default async (md5: string): Promise<IBeatmapInfo> => {
-  const data = await $fetch(`/api/beatmap-by-hash?md5=${md5}`)
-  if (!data) console.error("Failed to fetch backend api for 'beatmap-by-hash'")
-  const beatmapInfoData: IBeatmapInfo = await data
-  return beatmapInfoData
+  try {
+    const data: IBeatmapInfo = await $fetch<IBeatmapInfo>(`/api/beatmaps/lookup?md5=${md5}`)
+    return data
+  } catch (error: any) {
+    if (error.response) {
+      throw new Error(
+        `❌ Backend error (${error.response.status}): ${error.response.statusText || "Unknown error"}`
+      )
+    } else if (error.request) {
+      throw new Error("❌ Could not connect to backend server for /api/beatmaps/lookup.")
+    } else {
+      throw new Error(
+        `❌ An unexpected error occurred during beatmap lookup: ${error.message || "Unknown error"}`
+      )
+    }
+  }
 }
