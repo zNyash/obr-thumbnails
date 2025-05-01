@@ -6,13 +6,15 @@ import { ScoreDecoder } from "osu-parsers"
 import _ from "lodash"
 import type { ICalcAttrs } from "./types/ICalcAttrs"
 import type { IMapAttributes } from "./types/IMapAttributes"
+import type { IPlayerInfo } from "./types/IPlayerInfo"
 
-if (!process.env.OSU_TOKEN) getAuthToken()
+getAuthToken()
 
 // Basic Objects
 const scoreInfo = ref<ScoreInfo>()
 const scoreMods = ref<TModKey[]>()
 const beatmapInfo = ref<IBeatmapInfo>()
+const playerInfo = ref<IPlayerInfo>()
 const calculatedMapAttributes = ref<IMapAttributes>()
 const scoreRank = ref<string>()
 const colorMain = ref<string>("hsl(220 50 50)")
@@ -40,6 +42,7 @@ async function handleFileInput(e: Event) {
   if (parsedScore) console.log("Replay Parsed: ", parsedScore)
   else return
   scoreInfo.value = parsedScore.info
+  playerInfo.value = await getPlayerInfo(scoreInfo.value.username)
 
   beatmapInfo.value = await getBeatmapByHash(scoreInfo.value.beatmapHashMD5)
   scoreMods.value = getMods(scoreInfo.value.rawMods)
@@ -129,6 +132,13 @@ async function handleFileInput(e: Event) {
         />
       </div>
 
+      <!-- Profile -->
+      <img
+        id="Profile"
+        :src="playerInfo?.avatar_url"
+        class="size-64 absolute top-[321px] left-[512px] rounded-[48px] border-5 bg-[#404040] border-[var(--main)]"
+      />
+
       <!-- Background Area -->
       <div id="Form" class="w-[1280px] h-[8px] absolute top-[176px] bg-[var(--main)]"></div>
       <div id="Form" class="w-[1280px] h-[8px] absolute bottom-[0px] bg-[var(--main)]"></div>
@@ -159,6 +169,9 @@ async function handleFileInput(e: Event) {
   z-index: 2;
 }
 #StarRating {
+  z-index: 2;
+}
+#Profile {
   z-index: 2;
 }
 </style>
