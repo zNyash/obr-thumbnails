@@ -130,6 +130,14 @@ async function handleFileInput(e: Event) {
         type="1"
         class="absolute top-[34px]"
       />
+      <!-- Diff Name -->
+      <div
+        id="DiffName"
+        class="absolute z-11 font-semibold bg-[#242424] px-2 rounded-xl top-[152px] outline-6 outline-[var(--main)]"
+      >
+        <Text size="48" :text="`[${beatmapInfo?.version}]`" type="2" />
+        <div class="absolute bg-[var(--main)] mix-blend-overlay inset-0 -z-1"></div>
+      </div>
 
       <!-- Star Rating -->
       <div
