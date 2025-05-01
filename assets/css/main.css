@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   @apply bg-neutral-950 text-white;
 }

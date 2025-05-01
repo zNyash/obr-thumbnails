@@ -108,15 +108,36 @@ async function handleFileInput(e: Event) {
       </p>
     </div>
     <div class="flex items-center w-[1280px] h-[720px] bg-neutral-800 relative">
+      <!-- Star Rating -->
+      <div
+        id="StarRating"
+        class="absolute top-[321px] w-fit px-2 right-0 bg-[var(--main)]/25 min-w-[200px] text-right py-1 flex flex-col rounded-l-[24px] border-l-6 border-[var(--main)]"
+      >
+        <Text :text="`${calculatedMapAttributes?.starRating}`" size="48" type="2" class="mr-8" />
+        <Icon
+          name="material-symbols:kid-star"
+          size="30"
+          class="text-amber-400 absolute right-2 top-[18px]"
+        />
+
+        <Text :text="`${scoreInfo?.maxCombo}x`" size="48" type="2" class="-mt-3" />
+        <Text
+          :text="`${beatmapInfo?.max_combo}x`"
+          size="24"
+          type="2"
+          class="text-amber-200 -mt-4"
+        />
+      </div>
+
       <!-- Background Area -->
-      <div class="w-[1280px] h-[8px] absolute top-[176px] z-10 bg-[var(--main)]"></div>
-      <div class="w-[1280px] h-[8px] absolute bottom-[0px] z-10 bg-[var(--main)]"></div>
-      <CornerLeft :color="colorMain" class="absolute top-0 left-0 z-10" />
-      <CornerRight :color="colorMain" class="absolute top-0 right-0 z-10" />
+      <div id="Form" class="w-[1280px] h-[8px] absolute top-[176px] bg-[var(--main)]"></div>
+      <div id="Form" class="w-[1280px] h-[8px] absolute bottom-[0px] bg-[var(--main)]"></div>
+      <CornerLeft id="Form" :color="colorMain" class="absolute top-0 left-0" />
+      <CornerRight id="Form" :color="colorMain" class="absolute top-0 right-0" />
 
       <span data-name="DarkenArea">
         <div id="Darken1" class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
-        <!-- <div id="BGGlow" class="w-[1280px] h-[540px] absolute bottom-0 backdrop-blur-lg" :style="{ backgroundColor: colorMain }"></div> -->
+        <BgGlow id="BgGlow" :color="colorMain" class="absolute bottom-0" />
         <div
           id="Darken2"
           class="w-[1280px] h-[540px] bg-black/75 absolute bottom-0 backdrop-blur-lg"
@@ -127,4 +148,17 @@ async function handleFileInput(e: Event) {
   </main>
 </template>
 
-<style></style>
+<style scoped>
+[data-name="DarkenArea"] {
+  z-index: 1;
+}
+#BgGlow {
+  z-index: 1;
+}
+#Form {
+  z-index: 2;
+}
+#StarRating {
+  z-index: 2;
+}
+</style>
