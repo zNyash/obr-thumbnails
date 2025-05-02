@@ -129,7 +129,7 @@ class OsuApi {
    * @param username The username of the player.
    * @returns A Promise that resolves with the player information or rejects with an error.
    */
-  async getUser(username: string): Promise<IPlayerInfo> {
+  public async getUser(username: string): Promise<IPlayerInfo> {
     return this.request<IPlayerInfo>(`/users/${username}`)
   }
 
@@ -138,7 +138,7 @@ class OsuApi {
    * @param checksum The MD5 checksum of the beatmap.
    * @returns A Promise that resolves with the beatmap information or rejects with an error.
    */
-  async getBeatmapByChecksum(checksum: string): Promise<IBeatmapInfo> {
+  public async getBeatmapByChecksum(checksum: string): Promise<IBeatmapInfo> {
     return this.request<IBeatmapInfo>(`/beatmaps/lookup?checksum=${checksum}`)
   }
 
@@ -147,7 +147,7 @@ class OsuApi {
    * @param beatmapId The ID of the beatmap difficulty (can be a number or string).
    * @returns A Promise that resolves with the content of the .osu file as a string or rejects with an error.
    */
-  async getBeatmapOsuFile(beatmapId: number | string): Promise<string> {
+  public async getBeatmapOsuFile(beatmapId: number | string): Promise<string> {
     return this.request(`/${beatmapId}`, {}, "MAPFILE")
   }
 }

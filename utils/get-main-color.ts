@@ -2,7 +2,7 @@
  * @param url Url of the image
  * @returns Hex code of the color
  */
-export default async (url: string) => {
+export default async (url: string): Promise<string> => {
   const response = await $fetch("/api/main-color", {
     method: "POST",
     body: {
@@ -14,6 +14,7 @@ export default async (url: string) => {
     return "#121212"
   }
   if (typeof response === "object" && "message" in response) return "#242424"
+
   console.log("HSL: ", response)
   return response
 }

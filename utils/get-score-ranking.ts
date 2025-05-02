@@ -1,20 +1,12 @@
+import type { ScoreInfo } from "osu-classes"
+
 /**
- * @param rawMods Bitwise value of the mods.
- * @param count300 Amount of 300s on the replay.
- * @param count100 Amount of 100s on the replay.
- * @param count50 Amount of 50s on the replay.
- * @param count0 Amount of misses on the replay.
+ * @param scoreInfo Replay information object
  * @returns A string containing the score rank. Example: "S"
  */
-export default async (
-  rawMods: number | string,
-  count300: number,
-  count100: number,
-  count50: number,
-  count0: number
-) => {
+export default async (scoreInfo: ScoreInfo): Promise<string> => {
   const response = await $fetch(
-    `/api/calculate-rank?count300=${count300}&count100=${count100}&count50=${count50}&count0=${count0}&rawMods=${rawMods}`
+    `/api/calculate-rank?count300=${scoreInfo.count300}&count100=${scoreInfo.count100}&count50=${scoreInfo.count50}&count0=${scoreInfo.countMiss}&rawMods=${scoreInfo.rawMods}`
   )
   return response.rank
 }

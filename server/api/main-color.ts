@@ -1,5 +1,5 @@
 import _ from "lodash"
-import getColorPalette from "~/utils/get-color-palette"
+import getColorPalette from "~/server/utils/get-color-palette"
 
 export default defineEventHandler(async (event) => {
   const query = await readBody(event)
