@@ -6,7 +6,7 @@ import type { IBeatmapInfo } from "./types/IBeatmapInfo"
 import type { TModKey } from "./types/IModBitwise"
 import type { IMapAttributes } from "./types/IMapAttributes"
 import type { IPlayerInfo } from "./types/IPlayerInfo"
-import type {IMainColors} from "./types/IMainColors"
+import type { IMainColors } from "./types/IMainColors"
 
 // Basic Objects
 const scoreInfo = ref<ScoreInfo>()
@@ -18,7 +18,7 @@ const scoreMods = ref<TModKey[]>()
 const scoreRank = ref<string>()
 const mainColor = ref<IMainColors>({
   base: `hsl(${0} ${40} ${50})`,
-  glow: `hsl(${0} ${65} ${60})`
+  glow: `hsl(${0} ${65} ${60})`,
 })
 
 const hasSB = computed(() => {
@@ -30,8 +30,8 @@ const SBAmount = ref<number>(0)
 let mapFile: string
 
 // Comment Related
-const commentInput = ref<string>("insano o comentario")
-const keywordsInput = ref<string>("comentario")
+const commentInput = ref<string>("")
+const keywordsInput = ref<string>("")
 const keywords = computed(() => {
   if (!keywordsInput.value) return []
   return keywordsInput.value.split(" ").filter((word) => word.length > 0)
@@ -116,7 +116,7 @@ async function handleFileInput(e: Event) {
           </span>
 
           <span class="flex flex-col w-full items-start justify-center">
-            <!-- <label for="CommentInput">The comment for the replay.</label> -->
+            <label for="CommentInput">Replay comment</label>
             <input
               id="CommentInput"
               type="text"
@@ -125,7 +125,7 @@ async function handleFileInput(e: Event) {
               v-model="commentInput"
               placeholder="Replay comment"
             />
-            <!-- <label for="KeywordsInput">The keywords for the comment</label> -->
+            <label for="KeywordsInput">Comment keywords</label>
             <input
               id="KeywordsInput"
               type="text"
@@ -268,7 +268,11 @@ async function handleFileInput(e: Event) {
             class="size-64 absolute top-[321px] left-[512px] rounded-[48px] border-5 bg-[#404040] border-[var(--main)]"
           />
           <!-- Comment -->
-          <p v-html="formatedComment" id="Text" class="absolute font-semibold text-[64px] top-[599px] drop-shadow-[4px_4px_2px_rgba(0,0,0,0.75)]"></p>
+          <p
+            v-html="formatedComment"
+            id="Text"
+            class="absolute font-semibold text-[64px] top-[599px] drop-shadow-[4px_4px_2px_rgba(0,0,0,0.75)]"
+          ></p>
 
           <!-- Background Area -->
           <span>
@@ -301,7 +305,9 @@ async function handleFileInput(e: Event) {
 <style>
 [data-name="TextHighlight"] {
   color: var(--glow);
-  text-shadow: 0 0 40px var(--glow), 0 0 20px var(--glow);
+  text-shadow:
+    0 0 40px var(--glow),
+    0 0 20px var(--glow);
 }
 [data-name="DarkenArea"] {
   z-index: 1;

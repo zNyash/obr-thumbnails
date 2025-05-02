@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const color = {
     base: `hsl(${h} ${s} ${l})`,
-    glow: `hsl(${h} ${65} ${60})`
+    glow: `hsl(${h} ${65} ${60})`,
   }
 
   return color
