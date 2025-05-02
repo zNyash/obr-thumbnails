@@ -13,5 +13,10 @@ export default defineEventHandler(async (event) => {
   s = _.round(_.clamp(s * 100, 30, 50))
   l = _.round(_.clamp(l * 100, 40, 50))
 
-  return `hsl(${h} ${s} ${l})`
+  const color = {
+    base: `hsl(${h} ${s} ${l})`,
+    glow: `hsl(${h} ${65} ${60})`
+  }
+
+  return color
 })

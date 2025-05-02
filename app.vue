@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { ScoreDecoder } from "osu-parsers"
+import _ from "lodash"
 import type { ScoreInfo } from "osu-classes"
 import type { IBeatmapInfo } from "./types/IBeatmapInfo"
 import type { TModKey } from "./types/IModBitwise"
-import { ScoreDecoder } from "osu-parsers"
-import _ from "lodash"
-import type { ICalcAttrs } from "./types/ICalcAttrs"
 import type { IMapAttributes } from "./types/IMapAttributes"
 import type { IPlayerInfo } from "./types/IPlayerInfo"
+import type {IMainColors} from "./types/IMainColors"
 
 // Basic Objects
 const scoreInfo = ref<ScoreInfo>()
@@ -16,7 +16,10 @@ const mapAttributesInfo = ref<IMapAttributes>()
 
 const scoreMods = ref<TModKey[]>()
 const scoreRank = ref<string>()
-const mainColor = ref<string>("hsl(220 50 50)")
+const mainColor = ref<IMainColors>({
+  base: `hsl(${0} ${40} ${50})`,
+  glow: `hsl(${0} ${65} ${60})`
+})
 
 const hasSB = computed(() => {
   if (SBAmount.value <= 0) return false
@@ -25,6 +28,29 @@ const hasSB = computed(() => {
 const SBAmount = ref<number>(0)
 
 let mapFile: string
+
+// Comment Related
+const commentInput = ref<string>("insano o comentario")
+const keywordsInput = ref<string>("comentario")
+const keywords = computed(() => {
+  if (!keywordsInput.value) return []
+  return keywordsInput.value.split(" ").filter((word) => word.length > 0)
+})
+const formatedComment = computed(() => {
+  if (!commentInput.value) return ""
+
+  let html: string = commentInput.value
+
+  keywords.value.forEach((keyword) => {
+    const regex = new RegExp(`\\b${_.escapeRegExp(keyword)}\\b`, "gi")
+
+    html = html.replace(regex, (match) => {
+      return `<span data-name="TextHighlight">${match}</span>`
+    })
+  })
+
+  return html
+})
 
 // Image Handling
 const loadMapBackgroundImage = computed(() => {
@@ -62,23 +88,24 @@ async function handleFileInput(e: Event) {
 <template>
   <main
     class="flex flex-row items-center justify-center p-6 gap-8 h-[100vh]"
-    :style="{ '--main': mainColor }"
+    :style="{ '--main': mainColor.base, '--glow': mainColor.glow }"
   >
     <section class="flex flex-row items-center justify-between p-6 gap-8 h-[100vh] w-fit">
       <!-- Input Area -->
       <div class="flex flex-col items-end justify-center w-full h-full">
         <div class="flex flex-col items-start w-fit h-fit gap-4">
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="FileInput">Choose a replay (.osr) file.</label>
+            <label for="FileInput">Replay File</label>
             <input
               id="FileInput"
               type="file"
               class="bg-neutral-900 p-2 h-fit rounded-md border-neutral-700 border hover:bg-neutral-800/75 cursor-pointer"
               @change="handleFileInput"
+              accept=".osr"
             />
           </span>
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="hasSb">If theres any Slider Breaks, how many there is?</label>
+            <label for="hasSb">Slider Breaks</label>
             <input
               id="hasSb"
               type="number"
@@ -89,13 +116,23 @@ async function handleFileInput(e: Event) {
           </span>
 
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="ReplayComent">The comment for the replay.</label>
+            <!-- <label for="CommentInput">The comment for the replay.</label> -->
             <input
-              id="ReplayComent"
+              id="CommentInput"
               type="text"
               min="0"
               class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0"
-              v-model="SBAmount"
+              v-model="commentInput"
+              placeholder="Replay comment"
+            />
+            <!-- <label for="KeywordsInput">The keywords for the comment</label> -->
+            <input
+              id="KeywordsInput"
+              type="text"
+              min="0"
+              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border mt-2 hover:bg-neutral-800/75 outline-0"
+              v-model="keywordsInput"
+              placeholder="Comment keywords"
             />
           </span>
         </div>
@@ -155,6 +192,7 @@ async function handleFileInput(e: Event) {
               />
             </template>
           </div>
+
           <!-- Play Info -->
           <span>
             <!-- Profile Username -->
@@ -229,15 +267,18 @@ async function handleFileInput(e: Event) {
             :src="playerInfo?.avatar_url"
             class="size-64 absolute top-[321px] left-[512px] rounded-[48px] border-5 bg-[#404040] border-[var(--main)]"
           />
+          <!-- Comment -->
+          <p v-html="formatedComment" id="Text" class="absolute font-semibold text-[64px] top-[599px] drop-shadow-[4px_4px_2px_rgba(0,0,0,0.75)]"></p>
+
           <!-- Background Area -->
           <span>
             <div id="Form" class="w-[1280px] h-[8px] absolute top-[176px] bg-[var(--main)]"></div>
             <div id="Form" class="w-[1280px] h-[8px] absolute bottom-[0px] bg-[var(--main)]"></div>
-            <CornerLeft id="Form" :color="mainColor" class="absolute top-0 left-0" />
-            <CornerRight id="Form" :color="mainColor" class="absolute top-0 right-0" />
+            <CornerLeft id="Form" :color="mainColor.base" class="absolute top-0 left-[-1px]" />
+            <CornerRight id="Form" :color="mainColor.base" class="absolute top-0 right-[-1px]" />
             <span data-name="DarkenArea">
               <div id="Darken1" class="w-[1280px] h-[180px] absolute bg-black/50 top-0"></div>
-              <BgGlow id="BgGlow" :color="mainColor" class="absolute bottom-0" />
+              <BgGlow id="BgGlow" :color="mainColor.base" class="absolute bottom-0" />
               <div
                 id="Darken2"
                 class="w-[1280px] h-[540px] bg-black/75 absolute bottom-0 backdrop-blur-md"
@@ -246,37 +287,22 @@ async function handleFileInput(e: Event) {
           </span>
           <img :src="loadMapBackgroundImage" class="object-cover w-full h-full object-center" />
         </div>
-        <!-- Informations about the Replay and Beatmap as Text -->
-        <div id="MapAndPlayInfoDiv" class="flex items-start flex-col w-fit">
-          <p>Tittle: {{ beatmapInfo?.beatmapset.title }}</p>
-          <p>Diff Name: {{ beatmapInfo?.version }}</p>
-          <p>
-            Star Rating: {{ beatmapInfo?.difficulty_rating }}*/{{ mapAttributesInfo?.starRating }}*
-          </p>
-          <p>Player Name: {{ scoreInfo?.username }}</p>
-          <p>Score Ranking: {{ scoreRank }}</p>
-          <p>Play Max Combo: {{ scoreInfo?.maxCombo }}x</p>
-          <p>Map Max Combo: {{ beatmapInfo?.max_combo }}x</p>
-          <p>
-            Play Accuracy:
-            {{ `${scoreInfo ? _.round(scoreInfo?.accuracy * 100, 2) : ""}%` }}
-          </p>
-          <p>Miss Count: {{ scoreInfo?.countMiss }}x</p>
-          <p>PP: {{ mapAttributesInfo?.pp }}pp/{{ mapAttributesInfo?.ppMax }}pp</p>
-          <p>Mods: {{ scoreMods?.join("") }}</p>
-          <p>
-            Map Link:
-            <a class="text-blue-400 underline" :href="`${beatmapInfo?.url}`">{{
-              `${beatmapInfo?.url}`
-            }}</a>
-          </p>
-        </div>
+        <p>
+          Map Link:
+          <a class="text-blue-400 underline" :href="`${beatmapInfo?.url}`" target="_blank">{{
+            `${beatmapInfo?.url}`
+          }}</a>
+        </p>
       </div>
     </section>
   </main>
 </template>
 
-<style scoped>
+<style>
+[data-name="TextHighlight"] {
+  color: var(--glow);
+  text-shadow: 0 0 40px var(--glow), 0 0 20px var(--glow);
+}
 [data-name="DarkenArea"] {
   z-index: 1;
 }

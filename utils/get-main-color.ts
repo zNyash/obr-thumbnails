@@ -1,8 +1,16 @@
+import type { mainColors } from "~/types/IMainColors"
+
+
+const defaultColor: mainColors = {
+  base: `hsl(${0} ${40} ${50})`,
+  glow: `hsl(${0} ${80} ${60})`
+}
+
 /**
  * @param url Url of the image
  * @returns Hex code of the color
  */
-export default async (url: string): Promise<string> => {
+export default async (url: string): Promise<mainColors> => {
   const response = await $fetch("/api/main-color", {
     method: "POST",
     body: {
@@ -11,9 +19,9 @@ export default async (url: string): Promise<string> => {
   })
   if (!response) {
     console.log("Failed to fetch backend api for 'main-color'")
-    return "#121212"
+    return defaultColor
   }
-  if (typeof response === "object" && "message" in response) return "#242424"
+  if (typeof response === "object" && "message" in response) return defaultColor
 
   console.log("HSL: ", response)
   return response
