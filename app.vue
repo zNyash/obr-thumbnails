@@ -42,7 +42,7 @@ const formatedComment = computed(() => {
   let html: string = commentInput.value
 
   keywords.value.forEach((keyword) => {
-    const regex = new RegExp(`\\b${_.escapeRegExp(keyword)}\\b`, "gi")
+    const regex = new RegExp(`(^|\\s|#|\\b)(${_.escapeRegExp(keyword)})(\\b|$)`, 'gi')
 
     html = html.replace(regex, (match) => {
       return `<span data-name="TextHighlight">${match}</span>`
@@ -254,7 +254,7 @@ async function handleFileInput(e: Event) {
             <Mods :mods="scoreMods" class="absolute top-[476px] left-[788px]" id="Text"/>
             
             <!-- Score Ranking -->
-            <ScoreRanking :rank="scoreRank" class="absolute z-10 left-[-250px] top-[35px]" />
+            <ScoreRanking :rank="scoreRank" class="absolute select-none left-[-250px] top-[35px]" id="ScoreRanking" />
           </span>
           <!-- Profile -->
           <img
@@ -265,7 +265,7 @@ async function handleFileInput(e: Event) {
           <!-- Comment -->
           <p
             v-html="formatedComment"
-            id="Text"
+            id="Comment"
             class="absolute font-semibold text-[64px] top-[599px] drop-shadow-[4px_4px_2px_rgba(0,0,0,0.75)]"
           ></p>
 
@@ -321,10 +321,16 @@ async function handleFileInput(e: Event) {
   z-index: 2;
 }
 #Text {
-  z-index: 2;
+  z-index: 10;
 }
 #MapAndPlayInfoDiv p {
   margin-top: -5px;
+}
+#Comment {
+  z-index: 10;
+}
+#ScoreRanking {
+  z-index: 2;
 }
 [data-name="FC"] {
   filter: drop-shadow(0px 0px 12px color-mix(in oklab, var(--color-amber-400) 40%, transparent));
