@@ -251,13 +251,8 @@ async function handleFileInput(e: Event) {
               class="absolute top-[367px] left-[788px]"
             />
             <!-- Mods -->
-            <Text
-              id="Text"
-              :text="`${scoreMods}`"
-              size="48"
-              type="2"
-              class="absolute top-[476px] left-[788px]"
-            />
+            <Mods :mods="scoreMods" class="absolute top-[476px] left-[788px]" id="Text"/>
+            
             <!-- Score Ranking -->
             <ScoreRanking :rank="scoreRank" class="absolute z-10 left-[-250px] top-[35px]" />
           </span>
@@ -306,8 +301,9 @@ async function handleFileInput(e: Event) {
 [data-name="TextHighlight"] {
   color: var(--glow);
   text-shadow:
-    0 0 40px var(--glow),
-    0 0 20px var(--glow);
+    0 0 40px color-mix(in srgb, var(--glow) 100%, transparent),
+    0 0 30px color-mix(in srgb, var(--glow) 75%, transparent),
+    0 0 10px color-mix(in srgb, var(--glow) 25%, transparent);
 }
 [data-name="DarkenArea"] {
   z-index: 1;
