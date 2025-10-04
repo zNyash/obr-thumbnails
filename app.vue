@@ -167,9 +167,10 @@ async function handleFileInput(e: Event) {
           </span>
         </div>
       </div>
-      <div class="flex flex-col gap-4" name="Thumbnail">
+      <div class="flex flex-col gap-4">
         <!-- The Thumbnail Itself -->
         <div
+          name="Thumbnail"
           class="flex w-[1280px] h-[720px] bg-neutral-800 relative justify-center overflow-clip rounded-xl"
         >
           <Text
