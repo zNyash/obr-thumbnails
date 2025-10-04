@@ -42,7 +42,7 @@ const formatedComment = computed(() => {
   let html: string = commentInput.value
 
   keywords.value.forEach((keyword) => {
-    const regex = new RegExp(`(^|\\s|#|\\b)(${_.escapeRegExp(keyword)})(\\b|$)`, 'gi')
+    const regex = new RegExp(`(^|\\s|#|\\b)(${_.escapeRegExp(keyword)})(\\b|$)`, "gi")
 
     html = html.replace(regex, (match) => {
       return `<span data-name="TextHighlight">${match}</span>`
@@ -87,57 +87,87 @@ async function handleFileInput(e: Event) {
 
 <template>
   <main
-    class="flex flex-row items-center justify-center p-6 gap-8 h-[100vh]"
+    class="flex flex-row items-center justify-center p-6 gap-8 h-[100vh] relative"
     :style="{ '--main': mainColor.base, '--glow': mainColor.glow }"
   >
     <section class="flex flex-row items-center justify-between p-6 gap-8 h-[100vh] w-fit">
       <!-- Input Area -->
-      <div class="flex flex-col items-end justify-center w-full h-full">
-        <div class="flex flex-col items-start w-fit h-fit gap-4">
+      <div
+        class="flex flex-col items-end justify-center p-2 hover:w-80 hover:pr-8 w-12 h-full absolute top-0 left-0 z-10 bg-neutral-900 transition-all duration-300 group overflow-hidden shadow-2xl"
+        name="InputArea"
+      >
+        <div
+          class="absolute top-1/2 -translate-y-1/2 right-1/2 translate-x-1/2 rounded-md size-8 flex items-center justify-center z-10 group-hover:right-0 group-hover:translate-x-0 duration-300 transition-all"
+        >
+          <Icon
+            name="material-symbols:arrow-forward-ios"
+            size="20"
+            class="group-hover:rotate-180 duration-300 transition-all"
+          />
+        </div>
+        <div
+          class="flex flex-col items-start w-12 h-fit gap-4 group-hover:w-full duration-300 transition-all relative"
+        >
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="FileInput">Replay File</label>
+            <label
+              for="FileInput"
+              class="w-full group-hover:opacity-100 opacity-0 duration-300 transition-all"
+              >Replay File</label
+            >
             <input
               id="FileInput"
               type="file"
-              class="bg-neutral-900 p-2 h-fit rounded-md border-neutral-700 border hover:bg-neutral-800/75 cursor-pointer"
+              class="bg-neutral-900 p-2 w-full h-fit rounded-md border-neutral-700 border hover:bg-neutral-800/75 cursor-pointer opacity-0 group-hover:opacity-100 duration-300 transition-all"
               @change="handleFileInput"
               accept=".osr"
             />
           </span>
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="hasSb">Slider Breaks</label>
+            <label
+              for="hasSb"
+              class="w-full group-hover:opacity-100 opacity-0 duration-300 transition-all"
+              >Slider Breaks</label
+            >
             <input
               id="hasSb"
               type="number"
               min="0"
-              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0"
+              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0 duration-300 transition-all opacity-0 group-hover:opacity-100"
               v-model="SBAmount"
             />
           </span>
 
           <span class="flex flex-col w-full items-start justify-center">
-            <label for="CommentInput">Replay comment</label>
+            <label
+              for="CommentInput"
+              class="w-full group-hover:opacity-100 opacity-0 duration-300 transition-all"
+              >Replay comment</label
+            >
             <input
               id="CommentInput"
               type="text"
               min="0"
-              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0"
+              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border hover:bg-neutral-800/75 outline-0 duration-300 transition-all opacity-0 group-hover:opacity-100"
               v-model="commentInput"
               placeholder="Replay comment"
             />
-            <label for="KeywordsInput">Comment keywords</label>
+            <label
+              for="KeywordsInput"
+              class="w-full group-hover:opacity-100 opacity-0 duration-300 transition-all -mb-2"
+              >Comment keywords</label
+            >
             <input
               id="KeywordsInput"
               type="text"
               min="0"
-              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border mt-2 hover:bg-neutral-800/75 outline-0"
+              class="bg-neutral-900 w-full p-2 rounded-md border-neutral-700 border mt-2 hover:bg-neutral-800/75 outline-0 duration-300 transition-all opacity-0 group-hover:opacity-100"
               v-model="keywordsInput"
               placeholder="Comment keywords"
             />
           </span>
         </div>
       </div>
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4" name="Thumbnail">
         <!-- The Thumbnail Itself -->
         <div
           class="flex w-[1280px] h-[720px] bg-neutral-800 relative justify-center overflow-clip rounded-xl"
@@ -251,10 +281,14 @@ async function handleFileInput(e: Event) {
               class="absolute top-[367px] left-[788px]"
             />
             <!-- Mods -->
-            <Mods :mods="scoreMods" class="absolute top-[476px] left-[788px]" id="Text"/>
-            
+            <Mods :mods="scoreMods" class="absolute top-[476px] left-[788px]" id="Text" />
+
             <!-- Score Ranking -->
-            <ScoreRanking :rank="scoreRank" class="absolute select-none left-[-250px] top-[35px]" id="ScoreRanking" />
+            <ScoreRanking
+              :rank="scoreRank"
+              class="absolute select-none left-[-250px] top-[35px]"
+              id="ScoreRanking"
+            />
           </span>
           <!-- Profile -->
           <img
