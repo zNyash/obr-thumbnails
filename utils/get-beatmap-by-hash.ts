@@ -7,6 +7,7 @@ import type { IBeatmapInfo } from "~/types/IBeatmapInfo"
 export default async (md5: string): Promise<IBeatmapInfo> => {
   try {
     const data: IBeatmapInfo = await $fetch<IBeatmapInfo>(`/api/beatmaps/lookup?md5=${md5}`)
+    console.log(`✅ Successfully fetched beatmap info for hash: ${md5}:`, data)
     return data
   } catch (error: any) {
     if (error.response) {
