@@ -1,13 +1,19 @@
 import _ from "lodash"
-import getColorPalette from "~/server/utils/get-color-palette"
+import sharp from "sharp"
+import { ColorExtractor } from "../utils/getMainColor"
 
 export default defineEventHandler(async (event) => {
   const query = await readBody(event)
   if (!query) return
 
   const url = query.url as string
+  const response = await fetch(url)
+  const rawBuffer = Buffer.from(await response.arrayBuffer())
 
-  let [[h, s, l]] = await getColorPalette(url, 1)
+  const cleanedImage = await sharp(rawBuffer).png().toBuffer()
+
+  const quantizer = new ColorExtractor(1)
+  let [h, s, l] = await quantizer.getMainColor(cleanedImage)
 
   h = _.round(h)
   s = _.round(_.clamp(s * 100, 30, 50))

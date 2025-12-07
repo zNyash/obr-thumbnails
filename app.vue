@@ -55,8 +55,8 @@ const formatedComment = computed(() => {
 // Image Handling
 const loadMapBackgroundImage = computed(() => {
   if (beatmapInfo.value)
-    return `https://assets.ppy.sh/beatmaps/${beatmapInfo.value.beatmapset_id}/covers/raw.jpg`
-  return `https://assets.ppy.sh/beatmaps/${2327424}/covers/raw.jpg`
+    return `https://catboy.best/preview/background/${beatmapInfo.value.beatmapset_id}/set`
+  return `https://catboy.best/preview/background/${2327424}/set`
 })
 
 /**
